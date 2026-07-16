@@ -260,7 +260,7 @@ export function CalendarPage() {
                   {week.map((date) => {
                     const day = findDayByDate(calendar.days ?? [], date) as Day | undefined;
                     return (
-                      <div key={date.toISOString()} className="relative h-[150px]">
+                      <div key={date.toISOString()} className="relative h-[150px] hover:z-50">
                         <DayColumn
                           date={date}
                           calendar={calendar}
