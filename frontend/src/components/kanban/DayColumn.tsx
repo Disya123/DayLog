@@ -92,56 +92,71 @@ export function DayColumn({ date, calendar, day, onOpenDay, onShowHistory }: Day
     <div
       ref={setNodeRef}
       className={cn(
-        'relative w-full h-full flex flex-col rounded-2xl border bg-[var(--color-surface-2)] transition-all duration-300',
-        'overflow-hidden',
-        'hover:absolute hover:inset-x-0 hover:top-0 hover:h-auto hover:min-h-[150px] hover:max-h-[550px] hover:z-30 hover:shadow-diffuse-lg hover:overflow-y-auto',
+        'flex-1 min-w-0 flex flex-col rounded-2xl border transition-all duration-700 ease-[cubic-bezier(0.25,0.6,0.25,1)]',
+        'min-h-[148px] overflow-hidden',
+        !day ? 'bg-[#fafbfc] dark:bg-[var(--color-surface-2)]/30' : 'bg-[var(--color-surface-2)]',
+        'group-hover/week:[flex-grow:0.62] group-focus-within/week:[flex-grow:0.62]',
+        'hover:![flex-grow:2.3] focus-within:![flex-grow:2.3] hover:bg-[var(--color-surface)] hover:shadow-xl hover:border-[var(--color-accent)]/40',
         isOver ? 'border-[var(--color-accent)]/60 bg-[var(--color-accent-subtle)]/40' : 'border-[var(--color-border)]',
         today && 'ring-1 ring-inset ring-[var(--color-accent)]/30',
       )}
     >
       {/* Header */}
       <div
-        className="flex items-center justify-between px-4 pt-3.5 pb-3 cursor-pointer"
+        className="flex items-center justify-between px-4 pt-3.5 pb-3 cursor-pointer whitespace-nowrap"
         onClick={() => day && onOpenDay(day)}
       >
-        <div className="flex items-center gap-2">
-          <span
-            className={cn(
-              'text-sm font-medium',
-              today ? 'text-[var(--color-accent)]' : 'text-[var(--color-text)]',
-            )}
-          >
-            {formatDayHeader(date)}
+        <div className="flex items-center gap-1.5">
+          <span className={cn("text-sm font-semibold", today ? "text-[var(--color-accent)]" : "text-[var(--color-text)]")}>
+            {format(date, 'E,', { locale: ru })}
           </span>
-          {hasOverdueTasks && (
-            <span className="flex items-center gap-1 rounded-md bg-amber-100 px-1.5 py-0.5 text-xs font-medium text-amber-700">
-              <Warning size={11} weight="fill" />
+          <span className={cn("text-sm", today ? "text-[var(--color-accent)]" : "text-[var(--color-text-subtle)]")}>
+            {format(date, 'd MMM', { locale: ru })}
+          </span>
+        </div>
+        
+        {/* Stat badges */}
+        <div className="flex gap-1.5 ml-auto">
+          {overdueCount > 0 && (
+            <span className="flex items-center gap-1 rounded-md bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-600 dark:text-amber-400">
+              <Warning size={10} weight="bold" />
               просрочка
             </span>
           )}
-          {day && (
-            <span className="text-xs text-[var(--color-text-subtle)]">
-              {day.tasks.length}
+          {day && day.tasks.length > 0 && (
+            <span className="text-xs font-medium text-[var(--color-text-subtle)]">
+              {day.tasks.filter((t) => t.done).length} / {day.tasks.length}
             </span>
           )}
         </div>
       </div>
 
       {/* Tasks */}
-      <div className="flex flex-col gap-2 px-3 pb-3 flex-1">
-        <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
-          <AnimatePresence>
-            {day?.tasks.map((task) => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                day={day}
-                calendarId={calendar.id}
-                onShowHistory={onShowHistory}
-              />
-            ))}
-          </AnimatePresence>
-        </SortableContext>
+      <div className="flex flex-col gap-2 px-3 pb-3 flex-1 overflow-hidden">
+        {day ? (
+          <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
+            <AnimatePresence>
+              {day.tasks.map((task) => (
+                <TaskCard
+                  key={task.id}
+                  task={task}
+                  day={day}
+                  calendarId={calendar.id}
+                  onShowHistory={onShowHistory}
+                />
+              ))}
+            </AnimatePresence>
+          </SortableContext>
+        ) : (
+          <div className="flex-1 flex flex-col justify-center mt-1">
+            <button
+              className="flex-1 flex items-center justify-center gap-2 border border-dashed border-[var(--color-border)] rounded-xl text-[var(--color-text-subtle)] hover:text-[var(--color-accent)] hover:border-[var(--color-accent)]/50 transition-colors min-h-[44px] whitespace-nowrap cursor-default"
+            >
+              <Plus size={14} weight="bold" />
+              <span className="text-xs font-medium">Добавить задачу</span>
+            </button>
+          </div>
+        )}
 
         {!day && !adding && (
           <button

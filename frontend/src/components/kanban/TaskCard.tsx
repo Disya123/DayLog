@@ -150,7 +150,7 @@ export function TaskCard({ task, day, calendarId, onShowHistory }: TaskCardProps
           <p
             onDoubleClick={() => setEditing(true)}
             className={cn(
-              'text-sm leading-snug break-words',
+              'text-sm leading-snug truncate',
               task.done && 'text-done',
               !task.done && overdue && 'text-overdue',
               !task.done && !overdue && 'text-[var(--color-text)]',

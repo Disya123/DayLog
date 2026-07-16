@@ -253,22 +253,21 @@ export function CalendarPage() {
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <div className="flex flex-col gap-12">
+          <div className="flex flex-col gap-8">
             {weeks.map((week, weekIdx) => (
               <div key={weekIdx} className="w-full">
-                <div className="grid grid-cols-7 gap-3">
+                <div className="group/week flex gap-3">
                   {week.map((date) => {
                     const day = findDayByDate(calendar.days ?? [], date) as Day | undefined;
                     return (
-                      <div key={date.toISOString()} className="relative h-[150px] hover:z-50">
-                        <DayColumn
-                          date={date}
-                          calendar={calendar}
-                          day={day}
-                          onOpenDay={(d) => setOpenDay(d)}
-                          onShowHistory={(taskId) => setHistoryTaskId(taskId)}
-                        />
-                      </div>
+                      <DayColumn
+                        key={date.toISOString()}
+                        date={date}
+                        calendar={calendar}
+                        day={day}
+                        onOpenDay={(d) => setOpenDay(d)}
+                        onShowHistory={(taskId) => setHistoryTaskId(taskId)}
+                      />
                     );
                   })}
                 </div>
