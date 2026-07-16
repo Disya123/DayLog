@@ -255,8 +255,8 @@ export function CalendarPage() {
         >
           <div className="flex flex-col gap-12">
             {weeks.map((week, weekIdx) => (
-              <div key={weekIdx} className="overflow-x-auto pb-2">
-                <div className="min-w-[1000px] lg:min-w-0 grid grid-cols-7 gap-3">
+              <div key={weekIdx} className="w-full">
+                <div className="grid grid-cols-7 gap-3">
                   {week.map((date) => {
                     const day = findDayByDate(calendar.days ?? [], date) as Day | undefined;
                     return (
