@@ -37,9 +37,6 @@ services:
       NODE_ENV: ${NODE_ENV}
     ports:
       - "${BACKEND_PORT}:3001"
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
     command: sh -c "npx prisma migrate deploy && npx prisma db seed && npm run start:dev"
 
   frontend:
@@ -54,9 +51,6 @@ services:
       VITE_API_URL: ${VITE_API_URL}
     ports:
       - "${FRONTEND_PORT}:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
     command: npm run dev -- --host 0.0.0.0
 
 volumes:
