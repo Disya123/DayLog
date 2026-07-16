@@ -94,7 +94,7 @@ export function DayColumn({ date, calendar, day, onOpenDay, onShowHistory }: Day
       className={cn(
         'relative w-full h-full flex flex-col rounded-2xl border bg-[var(--color-surface-2)] transition-all duration-300',
         'overflow-hidden',
-        'hover:absolute hover:inset-x-0 hover:top-0 hover:h-auto hover:max-h-[550px] hover:z-30 hover:shadow-diffuse-lg hover:overflow-y-auto',
+        'hover:absolute hover:inset-x-0 hover:top-0 hover:h-auto hover:min-h-[150px] hover:max-h-[550px] hover:z-30 hover:shadow-diffuse-lg hover:overflow-y-auto',
         isOver ? 'border-[var(--color-accent)]/60 bg-[var(--color-accent-subtle)]/40' : 'border-[var(--color-border)]',
         today && 'ring-1 ring-inset ring-[var(--color-accent)]/30',
       )}
@@ -128,7 +128,7 @@ export function DayColumn({ date, calendar, day, onOpenDay, onShowHistory }: Day
       </div>
 
       {/* Tasks */}
-      <div className="flex flex-col gap-2 px-3 pb-3 min-h-[280px] flex-1">
+      <div className="flex flex-col gap-2 px-3 pb-3 flex-1">
         <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
           <AnimatePresence>
             {day?.tasks.map((task) => (
