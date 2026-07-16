@@ -42,8 +42,15 @@ export function DayColumn({ date, calendar, day, onOpenDay, onShowHistory }: Day
   // Создать день (если ещё не существует) — нужно перед созданием задачи
   const createDayMutation = useMutation({
     mutationFn: () => daysApi.create(calendar.id, date),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['calendar', calendar.id] });
+    onSuccess: (newDay) => {
+      queryClient.setQueryData<{ days: Day[] }>(['calendar', calendar.id], (old) => {
+        if (!old) return old;
+        if (old.days.find(d => d.id === newDay.id)) return old;
+        return {
+          ...old,
+          days: [...old.days, { ...newDay, tasks: [] }],
+        };
+      });
     },
   });
 
@@ -55,8 +62,18 @@ export function DayColumn({ date, calendar, day, onOpenDay, onShowHistory }: Day
       }
       return tasksApi.create(calendar.id, targetDay.id, newTitle);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['calendar', calendar.id] });
+    onSuccess: (newTask) => {
+      queryClient.setQueryData<{ days: Day[] }>(['calendar', calendar.id], (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          days: old.days.map((d) =>
+            d.id === newTask.dayId
+              ? { ...d, tasks: [...d.tasks, newTask] }
+              : d
+          ),
+        };
+      });
       setNewTitle('');
       setAdding(false);
     },

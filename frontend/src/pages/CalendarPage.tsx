@@ -22,12 +22,12 @@ import { daysApi } from '@/api/days';
 import { tasksApi } from '@/api/tasks';
 import {
   startOfWeek,
-  weekDays,
+  periodDays,
   addWeeks,
   formatWeekRange,
   findDayByDate,
 } from '@/lib/date-utils';
-import type { Day, Task } from '@/api/types';
+import type { Day, Task, Calendar } from '@/api/types';
 
 export function CalendarPage() {
   const { id } = useParams<{ id: string }>();
@@ -44,7 +44,7 @@ export function CalendarPage() {
     enabled: !!id,
   });
 
-  const days = useMemo(() => weekDays(weekStart), [weekStart]);
+  const days = useMemo(() => periodDays(weekStart, 28), [weekStart]);
   // Текущая ли неделя: сегодня попадает в диапазон [weekStart, weekStart+6]
   const isCurrentWeek = useMemo(() => {
     const today = new Date();
@@ -63,7 +63,46 @@ export function CalendarPage() {
   const moveMutation = useMutation({
     mutationFn: ({ taskId, toDayId }: { taskId: string; toDayId: string }) =>
       tasksApi.move(taskId, toDayId),
-    onSuccess: () => {
+    onMutate: async ({ taskId, toDayId }) => {
+      await queryClient.cancelQueries({ queryKey: ['calendar', id] });
+      const previousCalendar = queryClient.getQueryData(['calendar', id]);
+      
+      queryClient.setQueryData<Calendar>(['calendar', id], (old) => {
+        if (!old || !old.days) return old;
+        let taskToMove: Task | null = null;
+        let fromDayId: string | null = null;
+        
+        old.days.forEach((d: Day) => {
+          const t = d.tasks.find(x => x.id === taskId);
+          if (t) {
+            taskToMove = t;
+            fromDayId = d.id;
+          }
+        });
+        
+        if (!taskToMove || fromDayId === toDayId) return old;
+
+        return {
+          ...old,
+          days: old.days.map((d: Day) => {
+            if (d.id === fromDayId) {
+              return { ...d, tasks: d.tasks.filter(t => t.id !== taskId) };
+            }
+            if (d.id === toDayId) {
+              return { ...d, tasks: [...d.tasks, taskToMove!] };
+            }
+            return d;
+          })
+        };
+      });
+      return { previousCalendar };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previousCalendar) {
+        queryClient.setQueryData(['calendar', id], context.previousCalendar);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['calendar', id] });
     },
   });
@@ -207,7 +246,7 @@ export function CalendarPage() {
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {days.map((date) => {
               const day = findDayByDate(calendar.days ?? [], date) as Day | undefined;
               return (

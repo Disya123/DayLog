@@ -41,6 +41,7 @@ export function TaskCard({ task, day, calendarId, onShowHistory }: TaskCardProps
     mutationFn: (done: boolean) => tasksApi.update(task.id, { done }),
     onMutate: async (done) => {
       await queryClient.cancelQueries({ queryKey: ['calendar', calendarId] });
+      const previousCalendar = queryClient.getQueryData(['calendar', calendarId]);
       queryClient.setQueryData<{ days: Day[] }>(['calendar', calendarId], (old) => {
         if (!old) return old;
         return {
@@ -52,8 +53,14 @@ export function TaskCard({ task, day, calendarId, onShowHistory }: TaskCardProps
           ),
         };
       });
+      return { previousCalendar };
     },
-    onSuccess: () => {
+    onError: (_err, _newTodo, context) => {
+      if (context?.previousCalendar) {
+        queryClient.setQueryData(['calendar', calendarId], context.previousCalendar);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['calendar', calendarId] });
     },
   });

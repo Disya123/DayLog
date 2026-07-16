@@ -37,8 +37,13 @@ export function startOfWeek(date: Date): Date {
 
 /** 7 дней недели начиная с понедельника */
 export function weekDays(weekStart: Date): Date[] {
-  return [...Array(7)].map((_, i) => {
-    const d = new Date(weekStart);
+  return periodDays(weekStart, 7);
+}
+
+/** N дней начиная с указанной даты */
+export function periodDays(start: Date, numDays: number): Date[] {
+  return [...Array(numDays)].map((_, i) => {
+    const d = new Date(start);
     d.setUTCDate(d.getUTCDate() + i);
     return d;
   });
