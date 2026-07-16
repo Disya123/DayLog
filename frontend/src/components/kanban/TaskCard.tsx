@@ -162,7 +162,7 @@ export function TaskCard({ task, day, calendarId, onShowHistory }: TaskCardProps
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
+      <div className="absolute right-1.5 top-1.5 flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 bg-[var(--color-surface)] shadow-sm rounded-lg border border-[var(--color-border)] p-0.5">
         <button
           onClick={() => onShowHistory(task.id)}
           className="flex h-6 w-6 items-center justify-center rounded-md text-[var(--color-text-subtle)] hover:text-[var(--color-text)]"

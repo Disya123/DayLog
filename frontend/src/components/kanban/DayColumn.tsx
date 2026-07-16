@@ -126,7 +126,7 @@ export function DayColumn({ date, calendar, day, onOpenDay, onShowHistory }: Day
       </div>
 
       {/* Tasks */}
-      <div className="flex flex-col gap-2 px-3 pb-3 min-h-[120px] flex-1">
+      <div className="flex flex-col gap-2 px-3 pb-3 min-h-[280px] flex-1">
         <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
           <AnimatePresence>
             {day?.tasks.map((task) => (

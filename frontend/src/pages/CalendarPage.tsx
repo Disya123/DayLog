@@ -162,7 +162,7 @@ export function CalendarPage() {
     return (
       <div className="min-h-[100dvh] bg-[var(--color-bg)]">
         <AppHeader />
-        <main className="mx-auto max-w-[1400px] px-6 py-8">
+        <main className="mx-auto max-w-[1700px] px-6 py-8">
           <Skeleton className="h-10 w-64 mb-6" />
           <div className="grid grid-cols-1 md:grid-cols-7 gap-3">
             {[...Array(7)].map((_, i) => (
@@ -178,7 +178,7 @@ export function CalendarPage() {
     return (
       <div className="min-h-[100dvh] bg-[var(--color-bg)]">
         <AppHeader />
-        <main className="mx-auto max-w-[1400px] px-6 py-20 text-center">
+        <main className="mx-auto max-w-[1700px] px-6 py-20 text-center">
           <p className="text-sm text-[var(--color-text-muted)]">
             Календарь не найден или доступ запрещён.
           </p>
@@ -193,7 +193,7 @@ export function CalendarPage() {
   return (
     <div className="min-h-[100dvh] bg-[var(--color-bg)]">
       <AppHeader />
-      <main className="mx-auto max-w-[1400px] px-6 py-8">
+      <main className="mx-auto max-w-[1700px] px-6 py-8">
         {/* Header bar */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
           <div className="flex items-center gap-3">
@@ -253,7 +253,7 @@ export function CalendarPage() {
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-12">
             {weeks.map((week, weekIdx) => (
               <div key={weekIdx} className="overflow-x-auto pb-2">
                 <div className="min-w-[1000px] lg:min-w-0 grid grid-cols-7 gap-3">
