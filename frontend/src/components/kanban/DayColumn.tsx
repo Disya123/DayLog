@@ -4,6 +4,8 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Warning, X } from '@phosphor-icons/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 import { cn } from '@/lib/cn';
 import {
   formatDayHeader,
