@@ -4,8 +4,6 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Warning, X } from '@phosphor-icons/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
 import { cn } from '@/lib/cn';
 import {
   formatDayHeader,
@@ -109,12 +107,19 @@ export function DayColumn({ date, calendar, day, onOpenDay, onShowHistory }: Day
         onClick={() => day && onOpenDay(day)}
       >
         <div className="flex items-center gap-1.5">
-          <span className={cn("text-sm font-semibold", today ? "text-[var(--color-accent)]" : "text-[var(--color-text)]")}>
-            {format(date, 'E,', { locale: ru })}
-          </span>
-          <span className={cn("text-sm", today ? "text-[var(--color-accent)]" : "text-[var(--color-text-subtle)]")}>
-            {format(date, 'd MMM', { locale: ru })}
-          </span>
+          {(() => {
+            const parts = formatDayHeader(date).split(', ');
+            return (
+              <>
+                <span className={cn("text-sm font-semibold", today ? "text-[var(--color-accent)]" : "text-[var(--color-text)]")}>
+                  {parts[0]},
+                </span>
+                <span className={cn("text-sm", today ? "text-[var(--color-accent)]" : "text-[var(--color-text-subtle)]")}>
+                  {parts[1]}
+                </span>
+              </>
+            );
+          })()}
         </div>
         
         {/* Stat badges */}
