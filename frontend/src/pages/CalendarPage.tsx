@@ -44,7 +44,14 @@ export function CalendarPage() {
     enabled: !!id,
   });
 
-  const days = useMemo(() => periodDays(weekStart, 28), [weekStart]);
+  const weeks = useMemo(() => {
+    const allDays = periodDays(weekStart, 28);
+    const chunks: Date[][] = [];
+    for (let i = 0; i < allDays.length; i += 7) {
+      chunks.push(allDays.slice(i, i + 7));
+    }
+    return chunks;
+  }, [weekStart]);
   // Текущая ли неделя: сегодня попадает в диапазон [weekStart, weekStart+6]
   const isCurrentWeek = useMemo(() => {
     const today = new Date();
@@ -217,7 +224,7 @@ export function CalendarPage() {
           {/* Week switcher */}
           <div className="flex items-center gap-1.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-1">
             <button
-              onClick={() => setWeekStart((w) => addWeeks(w, -1))}
+              onClick={() => setWeekStart((w) => addWeeks(w, -4))}
               className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--color-text-muted)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)] press"
             >
               <CaretLeft size={16} weight="bold" />
@@ -232,7 +239,7 @@ export function CalendarPage() {
               {formatWeekRange(weekStart)}
             </span>
             <button
-              onClick={() => setWeekStart((w) => addWeeks(w, 1))}
+              onClick={() => setWeekStart((w) => addWeeks(w, 4))}
               className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--color-text-muted)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)] press"
             >
               <CaretRight size={16} weight="bold" />
@@ -246,20 +253,26 @@ export function CalendarPage() {
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {days.map((date) => {
-              const day = findDayByDate(calendar.days ?? [], date) as Day | undefined;
-              return (
-                <DayColumn
-                  key={date.toISOString()}
-                  date={date}
-                  calendar={calendar}
-                  day={day}
-                  onOpenDay={(d) => setOpenDay(d)}
-                  onShowHistory={(taskId) => setHistoryTaskId(taskId)}
-                />
-              );
-            })}
+          <div className="flex flex-col gap-8">
+            {weeks.map((week, weekIdx) => (
+              <div key={weekIdx} className="overflow-x-auto pb-2">
+                <div className="min-w-[1000px] lg:min-w-0 grid grid-cols-7 gap-3">
+                  {week.map((date) => {
+                    const day = findDayByDate(calendar.days ?? [], date) as Day | undefined;
+                    return (
+                      <DayColumn
+                        key={date.toISOString()}
+                        date={date}
+                        calendar={calendar}
+                        day={day}
+                        onOpenDay={(d) => setOpenDay(d)}
+                        onShowHistory={(taskId) => setHistoryTaskId(taskId)}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
 
           <DragOverlay dropAnimation={{ duration: 200, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }}>
