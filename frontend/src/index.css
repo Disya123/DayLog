@@ -1,0 +1,170 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Шрифты — Geist + Geist Mono (не Inter) */
+  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
+
+  /* Нейтральная Zinc база */
+  --color-bg: #fafaf9;
+  --color-surface: #ffffff;
+  --color-surface-2: #f4f4f5;
+  --color-border: #e4e4e7;
+  --color-border-strong: #d4d4d8;
+
+  /* Текст */
+  --color-text: #18181b;
+  --color-text-muted: #71717a;
+  --color-text-subtle: #a1a1aa;
+
+  /* Единственный акцент — Emerald (не AI-purple) */
+  --color-accent: #10b981;
+  --color-accent-hover: #059669;
+  --color-accent-subtle: #ecfdf5;
+
+  /* Семантические */
+  --color-overdue: #ca8a04;
+  --color-overdue-text: #a16207;
+  --color-done: #a1a1aa;
+  --color-danger: #e11d48;
+  --color-danger-subtle: #fff1f2;
+
+  /* Радиусы */
+  --radius-card: 1.25rem;
+  --radius-pill: 9999px;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  /* Скроллбар — тонкий, в нейтральных тонах */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border-strong);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-subtle);
+  }
+}
+
+@layer utilities {
+  /* Просроченная невыполненная задача — жёлтый шрифт */
+  .text-overdue {
+    color: var(--color-overdue-text);
+  }
+
+  /* Выполненная задача — серый зачёркнутый */
+  .text-done {
+    color: var(--color-done);
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+  }
+
+  /* Диффузная тень для карточек */
+  .shadow-diffuse {
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05);
+  }
+  .shadow-diffuse-lg {
+    box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Tactile feedback — нажатие */
+  .press {
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .press:active {
+    transform: scale(0.98);
+  }
+
+  /* line-clamp для описаний календарей */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* TipTap / ProseMirror editor styles */
+.prose {
+  color: var(--color-text);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.prose p {
+  margin: 0 0 0.6em 0;
+}
+.prose p:last-child {
+  margin-bottom: 0;
+}
+.prose h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0.8em 0 0.4em 0;
+  letter-spacing: -0.01em;
+}
+.prose h2 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0.7em 0 0.3em 0;
+}
+.prose ul {
+  list-style: disc;
+  padding-left: 1.4em;
+  margin: 0.4em 0;
+}
+.prose ol {
+  list-style: decimal;
+  padding-left: 1.4em;
+  margin: 0.4em 0;
+}
+.prose li {
+  margin: 0.2em 0;
+}
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  background: var(--color-surface-2);
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+}
+.prose blockquote {
+  border-left: 3px solid var(--color-border-strong);
+  padding-left: 1em;
+  margin: 0.6em 0;
+  color: var(--color-text-muted);
+}
+.prose strong {
+  font-weight: 600;
+}
+
+/* Пустой редактор — плейсхолдер */
+.prose p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--color-text-subtle);
+  pointer-events: none;
+  height: 0;
+}

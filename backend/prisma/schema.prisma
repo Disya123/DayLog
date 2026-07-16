@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  passwordHash String
+  name         String
+  calendars    Calendar[] @relation("OwnerCalendars")
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Calendar {
+  id          String      @id @default(cuid())
+  ownerId     String
+  owner       User        @relation("OwnerCalendars", fields: [ownerId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  color       String      @default("#10b981")
+  days        Day[]
+  shareLinks  ShareLink[]
+  auditLogs   AuditLog[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model ShareLink {
+  id         String    @id @default(cuid())
+  calendarId String
+  calendar   Calendar  @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+  token      String    @unique @default(uuid())
+  guests     Guest[]
+  createdAt  DateTime  @default(now())
+}
+
+model Guest {
+  id          String    @id @default(cuid())
+  shareLinkId String
+  shareLink   ShareLink @relation(fields: [shareLinkId], references: [id], onDelete: Cascade)
+  name        String
+  createdAt   DateTime  @default(now())
+  @@unique([shareLinkId, name])
+}
+
+model Day {
+  id          String   @id @default(cuid())
+  calendarId  String
+  calendar    Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+  date        DateTime
+  description Json?
+  tasks       Task[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@unique([calendarId, date])
+}
+
+model Task {
+  id        String   @id @default(cuid())
+  dayId     String
+  day       Day      @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  title     String
+  done      Boolean  @default(false)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AuditLog {
+  id          String    @id @default(cuid())
+  calendarId  String
+  calendar    Calendar  @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+  actorType   String
+  actorName   String
+  action      String
+  taskId      String
+  fromDayId   String?
+  toDayId     String?
+  meta        Json?
+  createdAt   DateTime  @default(now())
+}
