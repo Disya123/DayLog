@@ -20,7 +20,7 @@ export class ResourceAccessGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const actor = request.actor as Actor;
+    const actor = request.user as Actor;
     const params = request.params;
 
     if (!actor) {
