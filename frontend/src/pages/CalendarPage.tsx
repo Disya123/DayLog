@@ -260,14 +260,15 @@ export function CalendarPage() {
                   {week.map((date) => {
                     const day = findDayByDate(calendar.days ?? [], date) as Day | undefined;
                     return (
-                      <DayColumn
-                        key={date.toISOString()}
-                        date={date}
-                        calendar={calendar}
-                        day={day}
-                        onOpenDay={(d) => setOpenDay(d)}
-                        onShowHistory={(taskId) => setHistoryTaskId(taskId)}
-                      />
+                      <div key={date.toISOString()} className="relative h-[150px]">
+                        <DayColumn
+                          date={date}
+                          calendar={calendar}
+                          day={day}
+                          onOpenDay={(d) => setOpenDay(d)}
+                          onShowHistory={(taskId) => setHistoryTaskId(taskId)}
+                        />
+                      </div>
                     );
                   })}
                 </div>

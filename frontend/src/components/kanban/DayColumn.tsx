@@ -92,7 +92,9 @@ export function DayColumn({ date, calendar, day, onOpenDay, onShowHistory }: Day
     <div
       ref={setNodeRef}
       className={cn(
-        'flex flex-col rounded-2xl border bg-[var(--color-surface-2)]/50 transition-colors',
+        'absolute inset-x-0 top-0 flex flex-col rounded-2xl border bg-[var(--color-surface-2)] transition-all duration-300',
+        'h-[150px] max-h-[150px] overflow-hidden',
+        'hover:h-auto hover:max-h-[550px] hover:z-30 hover:shadow-diffuse-lg hover:overflow-y-auto',
         isOver ? 'border-[var(--color-accent)]/60 bg-[var(--color-accent-subtle)]/40' : 'border-[var(--color-border)]',
         today && 'ring-1 ring-inset ring-[var(--color-accent)]/30',
       )}
