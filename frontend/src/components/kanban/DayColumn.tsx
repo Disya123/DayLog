@@ -93,17 +93,17 @@ export function DayColumn({ date, calendar, day, onOpenDay, onShowHistory }: Day
       ref={setNodeRef}
       className={cn(
         'flex-1 min-w-0 flex flex-col rounded-2xl border transition-all duration-700 ease-[cubic-bezier(0.25,0.6,0.25,1)]',
-        'min-h-[148px] overflow-hidden',
+        'min-h-[148px] max-h-[260px] overflow-hidden',
         !day ? 'bg-[#fafbfc] dark:bg-[var(--color-surface-2)]/30' : 'bg-[var(--color-surface-2)]',
         'group-hover/week:[flex-grow:0.62] group-focus-within/week:[flex-grow:0.62]',
-        'hover:![flex-grow:2.3] focus-within:![flex-grow:2.3] hover:bg-[var(--color-surface)] hover:shadow-xl hover:border-[var(--color-accent)]/40',
+        'hover:![flex-grow:1.95] focus-within:![flex-grow:1.95] hover:bg-[var(--color-surface)] hover:shadow-xl hover:border-[var(--color-accent)]/40',
         isOver ? 'border-[var(--color-accent)]/60 bg-[var(--color-accent-subtle)]/40' : 'border-[var(--color-border)]',
         today && 'ring-1 ring-inset ring-[var(--color-accent)]/30',
       )}
     >
       {/* Header */}
       <div
-        className="flex items-center justify-between px-4 pt-3.5 pb-3 cursor-pointer whitespace-nowrap"
+        className="flex items-center justify-between px-4 pt-3.5 pb-3 cursor-pointer whitespace-nowrap shrink-0"
         onClick={() => day && onOpenDay(day)}
       >
         <div className="flex items-center gap-1.5">
@@ -139,7 +139,7 @@ export function DayColumn({ date, calendar, day, onOpenDay, onShowHistory }: Day
       </div>
 
       {/* Tasks */}
-      <div className="flex flex-col gap-2 px-3 pb-3 flex-1 overflow-hidden">
+      <div className="flex flex-col gap-2 px-3 pb-3 flex-1 overflow-y-auto custom-scrollbar">
         {day ? (
           <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
             <AnimatePresence>
